@@ -1,0 +1,36 @@
+= Java Pango Maze
+Tim Langhammer <tlhammer@mailbox.org>
+:introduction to the Java Pango Maze API:
+
+:icons: font
+// own properties
+:link-mfp: http://www.mazesforprogrammers.com/
+
+Mazes are a nice way of bringing math to our world in form of nice hedges and other nice looking plants.
+Formed to those elegant structures, seeing them from above.
+
+This is an API to create mazes.
+Based on the book "_Mazes for Programmers_"<<Buck15>> (link:{link-mfp}[see here]).
+
+== Intro
+
+First I try to adapt as much as possible ideas from the book mentioned above.
+I used the Ruby code from the book as a basis for the Java code.
+
+Second I try to write _good_ oop code based on different good Java books first and foremost mentioned the great "_Effective Java_"<<Bloch17>> from Joshua Bloch.
+
+NOTE: This is a fun project.
+Do not use this for any serious project.
+
+== Licence
+
+This project is licenced under the https://www.apache.org/licenses/LICENSE-2.0[Apache Licence].
+
+[bibliography]
+== References
+
+* [[[Buck15]]] Buck, Jamis. 2015. _Mazes for Programmers_.
+Pragmatic Bookshelf.
+ISBN-13: 978-1-68050-055-4
+* [[[Bloch17]]] Bloch, Joshua. 2017. _Effective Java_ . Boston: Addison-Wesley.
+ISBN:0-13-468599-7
