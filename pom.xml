@@ -37,6 +37,7 @@
     <modules>
         <module>core</module>
         <module>gui</module>
+        <module>io</module>
     </modules>
 
     <properties>

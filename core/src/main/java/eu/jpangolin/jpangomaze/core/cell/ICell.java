@@ -16,6 +16,11 @@
 
 package eu.jpangolin.jpangomaze.core.cell;
 
+import eu.jpangolin.jpangomaze.core.IDirection;
+
+import java.util.Map;
+import java.util.Set;
+
 /**
  * Basic Cell Concept.
  * <p>
@@ -42,6 +47,9 @@ public interface ICell {
      * @throws IllegalArgumentException if {@code other} is {@code this}
      */
     default void link(ICell other) {
+        if(this == other) {
+            throw new IllegalArgumentException("Try to link to yourself!");
+        }
         link(other, true);
     }
 
@@ -64,6 +72,9 @@ public interface ICell {
      * @throws IllegalArgumentException if {@code other} is {@code this}
      */
     default void unlink(ICell other) {
+        if(this == other) {
+            throw new IllegalArgumentException("Try to unlink yourself!");
+        }
         unlink(other, false);
     }
 
@@ -75,4 +86,32 @@ public interface ICell {
      * @throws NullPointerException if {@code other}
      */
     void unlink(ICell other, boolean bidi);
+
+    /**
+     * Return all neighbour cells which are linked to this cell.
+     * @implSpec The Set should be unmodifiable
+     * @return Set of neighbour cells linked to this cell
+     */
+    Set<ICell> getLinkedNeighbours();
+
+    /**
+     * Is a given neighbour cell linked to this cell.
+     * @param cell neighbour cell
+     * @return {@code true} if {@code this} cell is linked with {@code cell}
+     * @throws NullPointerException if {@code cell}
+     */
+    boolean isLinked(ICell cell);
+
+    /**
+     * Return whether you can link to this cell.
+     * F.E. you can <u>never</u> link a cell to a border cell
+     * @return {@code true} if {@code this} cell can be linked from others
+     */
+    boolean isLinkable();
+
+    /**
+     * Return the grid unique id.
+     * @return grid unique id
+     */
+    long guid();
 }
