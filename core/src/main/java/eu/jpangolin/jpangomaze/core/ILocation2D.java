@@ -36,7 +36,7 @@ package eu.jpangolin.jpangomaze.core;
  * </p>
  * <p>
  *     This interface is related to the {@link eu.jpangolin.jpangomaze.core.cell.ICell}
- *     interface but since a cell is <u>not</u> a location but has a location cell
+ *     interface but since a cell is <u>not</u> a location but <u>has</u> a location cell
  *     should not extend this.
  * </p>
  * @author jTzipi

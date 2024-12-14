@@ -44,6 +44,12 @@ public interface IGrid2D<C extends ICell2D> extends IGrid<C> {
         return getMask().isUnmasked(cell);
     }
 
+    /**
+     * Return whether a cell located [{@code row},{@code column}] is unmasked.
+     * @param row row [0 &le; row &lt; maxRow]
+     * @param column column [0 &le; column &lt; maxColumn]
+     * @return
+     */
     default boolean isUnmasked(int row, int column) {
         return getMask().isUnmasked(row, column);
     }

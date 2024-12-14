@@ -17,105 +17,194 @@
 package eu.jpangolin.jpangomaze.core.cell.d2;
 
 
-import eu.jpangolin.jpangomaze.core.Direction2DCartesian;
-import eu.jpangolin.jpangomaze.core.ILocation;
-import eu.jpangolin.jpangomaze.core.IWeightedEdge;
-
-import java.util.EnumSet;
-import java.util.Optional;
+import eu.jpangolin.jpangomaze.core.*;
+import eu.jpangolin.jpangomaze.core.cell.ICell;
 
 
+import java.util.*;
+
+/**
+ * A tetragonal cell on 2D plane.
+ * <p>
+ *
+ *
+ * </p>
+ * @apiNote I decided now to store each neighbour node as an own instance. Not storing them dynamically in the neighbour
+ * map.
+ *
+ */
 public class Cell2DTetragon extends AbstractCell2DCartesian implements ICell2DTetragon {
 
-    static final EnumSet<Direction2DCartesian> LEGAL_MOVE_SET = EnumSet.of(Direction2DCartesian.NORTH, Direction2DCartesian.EAST, Direction2DCartesian.WEST, Direction2DCartesian.SOUTH);
+    // -- Neighbours
+    private ICell2DTetragon nn;
+    private ICell2DTetragon en;
+    private ICell2DTetragon wn;
+    private ICell2DTetragon sn;
+    // -- Linked Neighbour Cell Weight Map
+    private final Map<ICell, Long> linkWeightMap = new HashMap<>();
 
-
-    Cell2DTetragon(final int row, final int column, long gridUniqueId ) {
-        super(row, column, gridUniqueId);
+    /**
+     * C.
+     * @param gridUID grid unique id
+     * @param row row &ge; 0
+     * @param column column &ge; 0
+     */
+    Cell2DTetragon(final long gridUID, final int row, final int column ) {
+        super(gridUID, row, column);
     }
 
-    public static Cell2DTetragon of(final int row, final int column, final long guid) {
+    /**
+     * Create a tetragonal cell.
+     * @param gridUID grid uid
+     * @param row row &ge; 0
+     * @param column column &ge; 0
+     * @return tetragonal cell
+     * @throws IllegalArgumentException if {@code row}|{@code column} are not inbound
+     */
+    public static Cell2DTetragon of(final long gridUID, final int row, final int column) {
+        MazeUtils.throwIfIllegalPosition2D(row, column);
+        return new Cell2DTetragon(gridUID, row, column);
+    }
 
-        return new Cell2DTetragon(row, column, guid);
+
+
+    @Override
+    public String toString() {
+        return "Cell2DTetragon{"
+                + "row='" + row
+                + "', column='" + column
+                + "', nn='" + nn
+                + "', en='" + en
+                + "', wn='" + wn
+                + "', sn='" + sn
+                + "', guid='" + guid
+                + "', masked='" + masked
+                + "'}";
     }
 
     @Override
-    public Optional<IWeightedEdge<ICell2DTetragon>> getNeighbourNorth() {
-        return neighbourMap.get(Direction2DCartesian.NORTH);
+    protected void init() {
+
+        ICell2DTetragon borderCell = borderCell(guid());
+        // - set all neighbours to border cells
+        nn = borderCell;
+        wn = borderCell;
+        en = borderCell;
+        sn = borderCell;
+    }
+
+    @Override
+    public ICell2DTetragon getNeighbourNorth() {
+
+        return nn;
     }
 
     @Override
     public ICell2DTetragon getNeighbourEast() {
-        return null;
+        return en;
     }
 
     @Override
     public ICell2DTetragon getNeighbourWest() {
-        return null;
+        return wn;
     }
 
     @Override
     public ICell2DTetragon getNeighbourSouth() {
-        return null;
+        return sn;
     }
 
     @Override
-    public void setNeighbourNorth(ICell2DTetragon nbCell, long weight) {
-
+    public void setNeighbourNorth(ICell2DTetragon neighbourNorth) {
+        Objects.requireNonNull(neighbourNorth);
+        this.nn = neighbourNorth;
     }
 
     @Override
-    public void setNeighbourEast(ICell2DTetragon nbCell, long weight) {
-
+    public void setNeighbourEast(ICell2DTetragon neighbourEast) {
+        this.en = Objects.requireNonNull(neighbourEast);
     }
 
     @Override
-    public void setNeighbourWest(ICell2DTetragon nbCell, long weight) {
-
+    public void setNeighbourWest(ICell2DTetragon neighbourWest) {
+    this.wn = Objects.requireNonNull(neighbourWest);
     }
 
     @Override
-    public void setNeighbourSouth(ICell2DTetragon nbCell, long weight) {
-
+    public void setNeighbourSouth(ICell2DTetragon neighbourSouth) {
+    this.sn = Objects.requireNonNull(neighbourSouth);
     }
 
+    @Override
+    public void setLinkWeight(ICell neighbourCell, long weight) {
+        // TODO relax check whether the cell is a neighbour cell and
+        // If so set the link here
+        if(!getLinkedNeighbours().contains(neighbourCell)) {
+            throw new IllegalArgumentException("");
+        }
 
-    public static ICell2DTetragon nullCell(long guid) {
-        return new NullCell2DTetragon(guid);
+        linkWeightMap.put(neighbourCell, weight);
     }
 
-    private static final class NullCell2DTetragon extends Cell2DTetragon {
-
-        private NullCell2DTetragon(final long guid) {
-            super(ILocation.UN_TRAVERSABLE, ILocation.UN_TRAVERSABLE, guid);
-        }
-
-        @Override
-        public Optional<IWeightedEdge<ICell2DTetragon>> getNeighbourNorth() {
-            return Optional.empty();
-        }
-
-
-
-        @Override
-        public void setNeighbourNorth(ICell2DTetragon nb, long weight) {
-            throw new UnsupportedOperationException("__NA__");
-        }
-
-        @Override
-        public void setNeighbourEast(ICell2DTetragon nb) {
-            throw new UnsupportedOperationException("__NA__");
-        }
-
-        @Override
-        public void setNeighbourWest(ICell2DTetragon nb, long weight) {
-            throw new UnsupportedOperationException("__NA__");
-        }
-
-        @Override
-        public void setNeighbourSouth(ICell2DTetragon nb, long weight) {
-            throw new UnsupportedOperationException("__NA__");
-        }
+    @Override
+    public Map<ICell, Long> getLinkedNeighbourWeightMap() {
+        return linkWeightMap;
     }
 
+    @Override
+    public Set<ICell> getNeighbours() {
+        return Set.of(nn, wn, en, sn);
+    }
+
+    public static ICell2DTetragon borderCell(long guid) {
+
+        return new BorderCell2DTetragon(guid);
+    }
+
+    public static final class BorderCell2DTetragon extends BorderCell2D implements ICell2DTetragon {
+
+        BorderCell2DTetragon(long guid) {
+            super(guid);
+        }
+
+        @Override
+        public ICell2DTetragon getNeighbourNorth() {
+            return null;
+        }
+
+        @Override
+        public ICell2DTetragon getNeighbourEast() {
+            return null;
+        }
+
+        @Override
+        public ICell2DTetragon getNeighbourWest() {
+            return null;
+        }
+
+        @Override
+        public ICell2DTetragon getNeighbourSouth() {
+            return null;
+        }
+
+        @Override
+        public void setNeighbourNorth(ICell2DTetragon neighbourNorth) {
+
+        }
+
+        @Override
+        public void setNeighbourEast(ICell2DTetragon neighbourEast) {
+
+        }
+
+        @Override
+        public void setNeighbourWest(ICell2DTetragon neighbourWest) {
+
+        }
+
+        @Override
+        public void setNeighbourSouth(ICell2DTetragon neighbourSouth) {
+
+        }
+    }
 }

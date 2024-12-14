@@ -14,39 +14,24 @@
  * limitations under the License.
  */
 
-package eu.jpangolin.jpangomaze.core;
+package eu.jpangolin.jpangomaze.core.distance;
 
 import eu.jpangolin.jpangomaze.core.cell.ICell;
+import java.util.Map;
 
 /**
- * Weighted Edge.
- * <p>
- *     A weighted edge has a weight or cost to travel along from one cell to an other.
- * </p>
- * @param <C>
+ * Result of a {@link IDistanceMeasurer}.
+ * @author jTzipi
  */
-public interface IWeightedEdge<C extends ICell> extends IEdge<C> {
+public interface IDistanceResult {
 
     /**
-     * An edge without cost.
+     * Map of cells of a grid and its {@linkplain IPathLink} to the previous cell.
+     * <p>
+     *     With this information we can build a list or path of cells forming a <em>shortest path</em>
+     *     for each cell we visited during the analysis of the grid.
+     * </p>
+     * @return Map of cells and its previous cell
      */
-    long FREE = 0L;
-    /**
-     * Default weight.
-     */
-    long SIMPLE = 1L;
-    /**
-     * Maximal Weight to a visitable neighbour cell.
-     */
-    long MAX_NEIGHBOUR = 128L;
-    /**
-     * Infinity weight.
-     */
-    long INF = Long.MAX_VALUE;
-
-    /**
-     * Weight of this edge.
-     * @return weight to travel this edge
-     */
-    long weight();
+    Map<ICell, IPathLink> pathLinkMap();
 }

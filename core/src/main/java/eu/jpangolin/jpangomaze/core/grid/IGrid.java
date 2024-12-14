@@ -52,7 +52,7 @@ public interface IGrid<C extends ICell> {
      * Return whether a cell is unmasked.
      *
      * @implSpec of course should {@code cell} part of this grid
-     * @return {@code true} if the cell for is <b>un</b>masked
+     * @return {@code true} if the cell is <b>un</b>masked
      * @throws NullPointerException if {@code cell} is {@code null}
      */
     boolean isUnmasked(C cell);
@@ -63,14 +63,13 @@ public interface IGrid<C extends ICell> {
      * For a cartesian 2D grid this is
      * {@code rows x columns} minus all masked cells.
      * @implSpec Count only cells who are not masked
-     * @return size of this grid &ge; 0
+     * @return size of this grid &gt; 1
      */
     int getSize();
-
 
     /**
      * Return unique grid id.
      * @return unique grid id
      */
-    long getUGID();
+    long getGUID();
 }

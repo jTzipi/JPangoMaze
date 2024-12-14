@@ -16,9 +16,20 @@
 
 package eu.jpangolin.jpangomaze.core.cell.d2;
 
+
+
+/**
+ * Abstract Cell 2D Cartesian.
+ * <p>
+ *
+ * </p>
+ * @author jTzipi
+ */
 public abstract class AbstractCell2DCartesian extends AbstractCell2D implements ICell2DCartesian {
 
-    AbstractCell2DCartesian(final int row, final int column, long gridUniqueId) {
-        super(row, column, gridUniqueId);
+
+    AbstractCell2DCartesian(final long gridUID, final int row, final int column ) {
+        super(gridUID, row, column);
     }
+
 }

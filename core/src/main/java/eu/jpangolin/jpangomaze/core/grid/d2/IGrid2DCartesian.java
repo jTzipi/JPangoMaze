@@ -34,10 +34,11 @@ import java.util.Objects;
  */
 public interface IGrid2DCartesian<C extends ICell2DCartesian> extends IGrid2D<C> {
 
-
+    int MIN_LEN = 2;
+    int MAX_LEN = Integer.MAX_VALUE / 2 - 2;
     /**
      * Return rows.
-     * @return rows [0 .. ]
+     * @return rows [2 .. ]
      */
     int getRows();
 

@@ -17,11 +17,15 @@
 package eu.jpangolin.jpangomaze.core;
 
 import eu.jpangolin.jpangomaze.core.cell.ICell;
+import eu.jpangolin.jpangomaze.core.distance.IDistanceMeasurer;
+import eu.jpangolin.jpangomaze.core.distance.IDistanceResult;
+import eu.jpangolin.jpangomaze.core.distance.IPathLink;
+import eu.jpangolin.jpangomaze.core.grid.d2.IGrid2D;
+import eu.jpangolin.jpangomaze.core.grid.d2.IGrid2DCartesian;
 import org.slf4j.LoggerFactory;
 
 
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -51,11 +55,28 @@ public final class MazeUtils {
         if(cellList.isEmpty()) {
             throw new IllegalArgumentException("The cell list is empty!");
         }
-        int pos = TLR.nextInt(cellList.size());
+        int pos = randomInt(cellList.size());
         LOG.warn("Next cell for pos {} of {}", pos, cellList.size());
         return cellList.get(pos);
     }
 
+    public static <C extends ICell> C getRandomCell(Set<C> cellSet ) {
+        Objects.requireNonNull(cellSet);
+        return getRandomCell(cellSet.stream().toList());
+    }
+
+    public static int randomInt(int max) {
+        return randomInt(0, max);
+    }
+
+    public static int randomInt(int origin, int max) {
+        if( origin >= max ) {
+            LOG.warn("Origin = '{}' >= max = '{}'", origin, max);
+            throw new IllegalArgumentException("Origin(=" + origin + ") must < then max(='"+max+"')!");
+        }
+
+        return TLR.nextInt(origin,max);
+    }
     /**
      * Clamp a value to [{@code min} .. {@code max}].
      *
@@ -84,8 +105,31 @@ public final class MazeUtils {
 
         return ret;
     }
+    public static List<ICell> shortestPathFor( final ICell cell, IDistanceResult distanceResult) {
 
+        if(!distanceResult.pathLinkMap().containsKey(cell)) {
+            LOG.warn("Cell {} not contained!", cell);
+            return List.of();
+        }
 
+        List<ICell> shortestPathL = new ArrayList<>();
+        Map<ICell, IPathLink> resultMap = distanceResult.pathLinkMap();
+        IPathLink pathLink = resultMap.get(cell);
+
+        while( !pathLink.link().equals(IPathLink.NullLink.SINGLETON) ) {
+
+            shortestPathL.add(pathLink.node());
+            pathLink  = pathLink.link();
+        }
+
+        return shortestPathL;
+    }
+
+    public static void throwIfIllegalPosition2D(int row, int column) {
+        if(ILocation.MIN > row || ILocation.MIN > column) {
+            throw new IndexOutOfBoundsException("Row='"+row+"' or colum='"+column+"' illegal!" );
+        }
+    }
     /**
      * Return whether a row is in bounds.
      * @param row row
@@ -106,12 +150,24 @@ public final class MazeUtils {
      *      {@code column} &ge; {@link ILocation#MIN min} and
      *       {@code row} &lt; {@code maxRows} and
      *       {@code column} &lt; {@code maxColumns} else {@code false}
+     * @throws IllegalStateException if {@code maxRows}|{@code maxColumns} &lt; {@linkplain IGrid2DCartesian#MIN_LEN}
      */
     public static boolean isLocationInBound2DCartesian(int row, int column, int maxRows, int maxColumns ) {
-    return ILocation.MIN <= row && ILocation.MIN <= column && row < maxRows && column < maxColumns;
+        if(IGrid2DCartesian.MIN_LEN > maxRows) {
+            throw new IllegalStateException("Max row='"+maxRows+"' must >= " + IGrid2DCartesian.MIN_LEN);
+        }
+        if(IGrid2DCartesian.MIN_LEN > maxColumns ) {
+
+            throw new IllegalStateException("Max column='"+maxColumns+"' must >= "+ IGrid2DCartesian.MIN_LEN);
+        }
+        return ILocation.MIN <= row && ILocation.MIN <= column && row < maxRows && column < maxColumns;
     }
 
-    
+    /**
+     * Throws an {@linkplain IndexOutOfBoundsException} if ![0 &le; row &lt; maxRows].
+     * @param row row
+     * @param maxRows max rows
+     */
     public static void throwIfRowOutOfBounds2DCartesian(int row, int maxRows ) {
         if(!isRowOutInBound2DCartesian(row, maxRows)) {
             throw new IndexOutOfBoundsException("Row[=" + row + "] is out of bound[" + ILocation.MIN + ", " + maxRows+"]");
@@ -126,7 +182,7 @@ public final class MazeUtils {
      * @param maxColumns max columns
      * @throws IndexOutOfBoundsException if
      */
-    public static void throwIfOutOfBounds2DCartesian( int row, int column, int maxRows, int maxColumns) {
+    public static void throwIfCellOutOfBounds2DCartesian(int row, int column, int maxRows, int maxColumns) {
             if( !isLocationInBound2DCartesian(row, column, maxRows, maxColumns) ) {
                 throw new IndexOutOfBoundsException("["+ row+","+column+"] is not in [0,"+maxRows+"][0,"+maxColumns+"]" );
             }

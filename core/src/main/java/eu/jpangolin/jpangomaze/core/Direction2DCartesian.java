@@ -16,7 +16,12 @@
 
 package eu.jpangolin.jpangomaze.core;
 
-public enum Direction2DCartesian implements IDirection2DCartesian {
+/**
+ * Discrete directions on a 2D plane.
+ *
+ *
+ */
+public enum Direction2DCartesian {
 
     NORTH,
     NORTH_EAST,

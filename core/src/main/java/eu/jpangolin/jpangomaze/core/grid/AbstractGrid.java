@@ -14,7 +14,20 @@
  * limitations under the License.
  */
 
-package eu.jpangolin.jpangomaze.core;
+package eu.jpangolin.jpangomaze.core.grid;
 
-public interface IDirection2DCartesian {
+import eu.jpangolin.jpangomaze.core.cell.ICell;
+
+public abstract class AbstractGrid<C extends ICell> {
+
+    /**
+     * Create and prepare the grid.
+     */
+    protected abstract void prepare();
+
+    /**
+     * Configure the grid.
+     */
+    protected abstract void configure();
+
 }

@@ -16,18 +16,18 @@
 
 package eu.jpangolin.jpangomaze.core.grid.d2;
 
-import eu.jpangolin.jpangomaze.core.ILocation;
 import eu.jpangolin.jpangomaze.core.ILocation2D;
 import eu.jpangolin.jpangomaze.core.Location2D;
 import eu.jpangolin.jpangomaze.core.MazeUtils;
 
+import eu.jpangolin.jpangomaze.core.cell.ICell;
 import eu.jpangolin.jpangomaze.core.cell.d2.ICell2DCartesian;
 
 import java.util.*;
 import java.util.stream.Stream;
 
 import static eu.jpangolin.jpangomaze.core.MazeUtils.clamp;
-import static eu.jpangolin.jpangomaze.core.MazeUtils.throwIfOutOfBounds2DCartesian;
+import static eu.jpangolin.jpangomaze.core.MazeUtils.throwIfCellOutOfBounds2DCartesian;
 
 /**
  * Abstract skeletal implementation of {@link IGrid2DCartesian}.
@@ -35,15 +35,7 @@ import static eu.jpangolin.jpangomaze.core.MazeUtils.throwIfOutOfBounds2DCartesi
  *
  * @author jTzipi
  */
-public abstract class AbstractGrid2DCartesian<C extends ICell2DCartesian> implements IGrid2DCartesian<C> {
-
-    /**
-     * Minimal length for rows and columns.
-     * TODO: maybe MIN_LEN = DIM
-     *       maybe LAX_LEN = Integer.MAX_VALUE / getDim() - getDim()
-     */
-    static final int MIN_LEN = 2;
-    static final int MAX_LEN = Integer.MAX_VALUE / 2 - 2;
+public abstract class AbstractGrid2DCartesian<C extends ICell2DCartesian> extends AbstractGrid2D<C> implements IGrid2DCartesian<C> {
 
     // -- Attribute
     final int rows;     // rows
@@ -64,16 +56,6 @@ public abstract class AbstractGrid2DCartesian<C extends ICell2DCartesian> implem
         this.mask2D = new Mask2DCartesian(this.rows, this.cols);
         this.guid = MazeUtils.generateGUID();
     }
-
-    /**
-     * Create and prepare the grid.
-     */
-    abstract void prepare();
-
-    /**
-     * Configure the grid.
-     */
-    abstract void configure();
 
     /**
      * Return the - prepared and configured - 2D array grid.
@@ -116,32 +98,27 @@ public abstract class AbstractGrid2DCartesian<C extends ICell2DCartesian> implem
     public List<C> getCells() {
         return Stream.of(grid())
                 .flatMap(Stream::of)
-                .filter( this::isUnmasked)
+                .filter( ICell::isUnmasked)
                 .toList();
     }
 
     @Override
     public List<C> getCellsForRow(int row) {
-        if(ILocation.MIN > row || row >= getRows()) {
-            throw new IndexOutOfBoundsException("Row[=" + row + "] is not inbound" );
-        }
+        MazeUtils.throwIfRowOutOfBounds2DCartesian(row, getRows());
 
         return Stream.of(grid()[row])
-                .filter(this::isUnmasked)
+                .filter( ICell::isUnmasked)
                 .toList();
     }
 
     @Override
     public C getCell(int row, int column) {
-        if(!isInbound(row , column)) {
-            throw new IndexOutOfBoundsException("Row[=" +row+"] or Column[=" + column+ "] < " + ILocation.MIN);
-        }
-
+        MazeUtils.throwIfCellOutOfBounds2DCartesian(row, getRows(), column, getColumns());
         return grid()[row][column];
     }
 
     @Override
-    public long getUGID() {
+    public long getGUID() {
         return guid;
     }
 
@@ -162,20 +139,20 @@ public abstract class AbstractGrid2DCartesian<C extends ICell2DCartesian> implem
 
         @Override
         public boolean isUnmasked(int row, int column) {
-            throwIfOutOfBounds2DCartesian(row, column, rows, cols);
+            throwIfCellOutOfBounds2DCartesian(row, column, rows, cols);
             return !maskS.contains(Location2D.of(row, column));
         }
 
         @Override
         public boolean mask(int row, int column) {
-            throwIfOutOfBounds2DCartesian(row, column, rows, cols);
+            throwIfCellOutOfBounds2DCartesian(row, column, rows, cols);
             Location2D l2D = Location2D.of(row, column);
             return maskS.add(l2D);
         }
 
         @Override
         public boolean unmask(int row, int column) {
-            throwIfOutOfBounds2DCartesian(row,column, rows, cols);
+            throwIfCellOutOfBounds2DCartesian(row,column, rows, cols);
             Location2D l2d = Location2D.of(row, column);
             return maskS.remove(l2d);
         }

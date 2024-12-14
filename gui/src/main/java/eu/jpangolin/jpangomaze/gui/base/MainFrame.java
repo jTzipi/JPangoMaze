@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package eu.jpangolin.jpangomaze.core.algo.d2;
+package eu.jpangolin.jpangomaze.gui.base;
 
-public class Sidewinder2D {
+import javafx.scene.layout.BorderPane;
+
+public final class MainFrame extends BorderPane {
 }

@@ -17,26 +17,23 @@
 package eu.jpangolin.jpangomaze.core.cell.d2;
 
 import eu.jpangolin.jpangomaze.core.ILocation;
-import eu.jpangolin.jpangomaze.core.cell.ICell;
-import org.slf4j.LoggerFactory;
+import eu.jpangolin.jpangomaze.core.cell.AbstractCell;
 
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
-
-
 /**
- *
+ * Abstract implementation of a 2D cell.
+ * <p>
+ *     Here we add accessors for rows and columns and the equals and hash code method.
+ * </p>
  */
-public abstract class AbstractCell2D implements ICell2D {
+public abstract class AbstractCell2D extends AbstractCell implements ICell2D {
 
-    protected static final org.slf4j.Logger CELL_LOG = LoggerFactory.getLogger(AbstractCell2D.class);
+
 
     // -- Attribute
     final int row;
     final int column;
-    final long guid;
-    final Set<ICell> linkedNeighbourSet = new HashSet<>();
+
 
     /**
      * Abstract Cell 2D.
@@ -44,48 +41,11 @@ public abstract class AbstractCell2D implements ICell2D {
      * @param column column [{@link ILocation#MIN} ..]
      * @param gridUniqueId grid unique id
      */
-    AbstractCell2D(final int row, final int column, long gridUniqueId) {
+    AbstractCell2D(final long gridUniqueId, final int row, final int column ) {
+        super(gridUniqueId);
         this.row = Math.max(ILocation.MIN, row);
         this.column = Math.max(ILocation.MIN ,column);
-        this.guid = gridUniqueId;
-    }
 
-    @Override
-    public void link(ICell other, boolean bidi) {
-        if(isLinked(other)) {
-            CELL_LOG.info("The cell '{}' is linked to '{}' already!", other, this);
-            return;
-        }
-
-        boolean added = getLinkedNeighbours().add(other);
-        CELL_LOG.warn("Link '{}' to '{}' done = {}!", other, this, added);
-        if(bidi) {
-            other.link(this, false);
-        }
-    }
-
-    @Override
-    public void unlink(ICell other, boolean bidi) {
-        if(!isLinked(other)) {
-            CELL_LOG.info("The cell '{}' is unlinked from '{}' already!", other, this);
-            return;
-        }
-        boolean rem = getLinkedNeighbours().remove(other);
-        CELL_LOG.warn("UnLink '{}' from '{}' done = {}!", other, this, rem);
-        if(bidi) {
-            other.unlink(this, false);
-        }
-    }
-
-    @Override
-    public boolean isLinked(ICell cell) {
-        Objects.requireNonNull(cell);
-        return getLinkedNeighbours().contains(cell);
-    }
-
-    @Override
-    public Set<ICell> getLinkedNeighbours() {
-        return linkedNeighbourSet;
     }
 
     @Override
@@ -98,20 +58,35 @@ public abstract class AbstractCell2D implements ICell2D {
         return column;
     }
 
-    @Override
-    public final long guid() {
-        return guid;
-    }
+
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof ICell2D that)) return false;
-        return row == that.getRow() && column == that.getColumn() && guid == that.guid();
+        return row == that.getRow() && column == that.getColumn() && guid() == that.guid();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(row, column, guid);
+        return Objects.hash(row, column, guid());
+    }
+
+    public static class BorderCell2D extends BorderCell implements ICell2D {
+
+
+        BorderCell2D(long guid) {
+            super(guid);
+        }
+
+        @Override
+        public int getRow() {
+            return ILocation.UN_TRAVERSABLE;
+        }
+
+        @Override
+        public int getColumn() {
+            return ILocation.UN_TRAVERSABLE;
+        }
     }
 }

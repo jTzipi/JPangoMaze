@@ -16,24 +16,30 @@
 
 package eu.jpangolin.jpangomaze.core;
 
-import eu.jpangolin.jpangomaze.core.cell.ICell;
+import java.util.EnumSet;
+import java.util.function.BooleanSupplier;
 
-/**
- * Edge is a connection between two cells.
- *
- * @author jTzipi
- */
-public interface IEdge<C extends ICell> {
+public enum TravelState implements BooleanSupplier {
 
-    /**
-     * The cell from which the edge start.
-     * @return host cell
-     */
-    C host();
 
-    /**
-     * The cell to which this edge is directed.
-     * @return neighbour cell
-     */
-    C neighbour();
+    PERMITTED(true),
+    MASKED(false),
+    WEIGHT(false),
+    NOT_LEGAL_MOVE(false),
+    BORDER(false),
+    __NA__(false);
+    ;
+    // Travel to cell allowed
+    final boolean accept;
+
+    TravelState(boolean accept) {
+        this.accept = accept;
+    }
+
+    @Override
+    public boolean getAsBoolean() {
+        return accept;
+    }
+
+    public static EnumSet<TravelState> DENIED_STATES = EnumSet.of(MASKED, WEIGHT, NOT_LEGAL_MOVE, BORDER, __NA__);
 }

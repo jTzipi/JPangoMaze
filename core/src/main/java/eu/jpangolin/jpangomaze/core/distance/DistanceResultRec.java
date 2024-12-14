@@ -14,39 +14,16 @@
  * limitations under the License.
  */
 
-package eu.jpangolin.jpangomaze.core;
+package eu.jpangolin.jpangomaze.core.distance;
 
 import eu.jpangolin.jpangomaze.core.cell.ICell;
 
+import java.util.Map;
+
 /**
- * Weighted Edge.
- * <p>
- *     A weighted edge has a weight or cost to travel along from one cell to an other.
- * </p>
- * @param <C>
+ * Record of {@linkplain IPathLink}.
+ * @param pathLinkMap the map of cells and path links
+ * @author jTzipi
  */
-public interface IWeightedEdge<C extends ICell> extends IEdge<C> {
-
-    /**
-     * An edge without cost.
-     */
-    long FREE = 0L;
-    /**
-     * Default weight.
-     */
-    long SIMPLE = 1L;
-    /**
-     * Maximal Weight to a visitable neighbour cell.
-     */
-    long MAX_NEIGHBOUR = 128L;
-    /**
-     * Infinity weight.
-     */
-    long INF = Long.MAX_VALUE;
-
-    /**
-     * Weight of this edge.
-     * @return weight to travel this edge
-     */
-    long weight();
+public record DistanceResultRec(Map<ICell, IPathLink> pathLinkMap) implements IDistanceResult {
 }

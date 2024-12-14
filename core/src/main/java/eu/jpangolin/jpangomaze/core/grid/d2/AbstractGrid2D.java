@@ -14,19 +14,12 @@
  * limitations under the License.
  */
 
-package eu.jpangolin.jpangomaze.core.algo;
+package eu.jpangolin.jpangomaze.core.grid.d2;
 
-import eu.jpangolin.jpangomaze.core.cell.ICell;
-import eu.jpangolin.jpangomaze.core.grid.IGrid;
+import eu.jpangolin.jpangomaze.core.cell.d2.ICell2D;
+import eu.jpangolin.jpangomaze.core.grid.AbstractGrid;
 
-/**
- * Each algorithm can construct or 'plant' a grid.
- * @param <G> grid type
- * @param <C> cell type
- * @author jTzipi
- */
-public interface IPlantable<G extends IGrid<C>, C extends ICell> {
 
-    void plant( G grid);
+public abstract class AbstractGrid2D<C extends ICell2D>  extends AbstractGrid<C> implements IGrid2D<C> {
 
 }

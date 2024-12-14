@@ -46,8 +46,12 @@
         <maven.compiler.target>21</maven.compiler.target>
         <maven.plugin.compile>3.13.0</maven.plugin.compile>
         <maven.plugin.gpg>3.2.7</maven.plugin.gpg>
+        <maven.plugin.javafx>0.0.8</maven.plugin.javafx>
         <lib.slf4j.version>2.0.16</lib.slf4j.version>
         <lib.jackson.version>2.18.1</lib.jackson.version>
+        <lib.openjfx.version>21.0.5</lib.openjfx.version>
+
+
         <lib.junit.version>5.11.3</lib.junit.version>
     </properties>
 
@@ -85,6 +89,18 @@
                 <artifactId>jackson-annotations</artifactId>
                 <version>${lib.jackson.version}</version>
             </dependency>
+            <!-- Open JFX -->
+            <dependency>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-controls</artifactId>
+                <version>${lib.openjfx.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-graphics</artifactId>
+                <version>${lib.openjfx.version}</version>
+            </dependency>
 
             <!-- JUnit -->
             <dependency>
@@ -105,18 +121,33 @@
     </dependencyManagement>
     <!-- Build -->
     <build>
+
+        <pluginManagement>
+            <plugins>
+
+                <!-- Maven Compile Plugin -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven.plugin.compile}</version>
+                    <configuration>
+                        <source>${maven.compiler.source}</source>
+                        <target>${maven.compiler.target}</target>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.openjfx</groupId>
+                    <artifactId>javafx-maven-plugin</artifactId>
+                    <version>${maven.plugin.javafx}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
         <plugins>
 
             <!-- Maven Compile Plugin -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven.plugin.compile}</version>
-                <configuration>
-                    <source>${maven.compiler.source}</source>
-                    <target>${maven.compiler.target}</target>
-                </configuration>
-            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>

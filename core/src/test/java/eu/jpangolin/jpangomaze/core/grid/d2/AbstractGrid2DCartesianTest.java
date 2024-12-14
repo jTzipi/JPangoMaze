@@ -48,7 +48,7 @@ class AbstractGrid2DCartesianTest {
     }
 
     @org.junit.jupiter.api.Test
-    void getUGID() {
+    void getGUID() {
     }
 
     @org.junit.jupiter.api.Test

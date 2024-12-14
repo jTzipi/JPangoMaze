@@ -14,19 +14,7 @@
  * limitations under the License.
  */
 
-package eu.jpangolin.jpangomaze.core.algo;
+package eu.jpangolin.jpangomaze.io.mask;
 
-import eu.jpangolin.jpangomaze.core.cell.ICell;
-import eu.jpangolin.jpangomaze.core.grid.IGrid;
-
-/**
- * Each algorithm can construct or 'plant' a grid.
- * @param <G> grid type
- * @param <C> cell type
- * @author jTzipi
- */
-public interface IPlantable<G extends IGrid<C>, C extends ICell> {
-
-    void plant( G grid);
-
+public interface IMaskProvider {
 }

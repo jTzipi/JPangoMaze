@@ -28,7 +28,7 @@ public class Grid2DTetragon extends AbstractGrid2DCartesian<ICell2DTetragon> {
     /**
      * The grid.
      */
-    private ICell2DTetragon[][] grid;
+    private final ICell2DTetragon[][] grid;
 
     /**
      * Grid2DTetragon.
@@ -37,85 +37,95 @@ public class Grid2DTetragon extends AbstractGrid2DCartesian<ICell2DTetragon> {
      */
     Grid2DTetragon(final int rows, int columns) {
         super(rows, columns);
-
+        this.grid = new ICell2DTetragon[getRows()][getColumns()];
     }
 
     @Override
-    void prepare() {
+    protected void prepare() {
 
-        this.grid = new ICell2DTetragon[getRows()][getColumns()];
-        // Default cell for not existing cells
-        ICell2DTetragon borderCell = Cell2DTetragon.nullCell(getUGID());
+
+
 
         for( int ir = 0; ir < getRows(); ir++ ) {
             for(int ic = 0; ic < getColumns(); ic++ ) {
 
                 boolean unmasked = isUnmasked(ir, ic);
-                // create new
-                ICell2DTetragon tetraCell = unmasked  ? Cell2DTetragon.of(ir,ic,getUGID()) : borderCell;
+                // create new tetragonal cell
+                // if border/masked - a border cell
+                // or a normal cell
+                ICell2DTetragon tetraCell = Cell2DTetragon.of(getGUID(), ir, ic);
+
+                if(!unmasked) {
+                    tetraCell.setMasked(true);
+                }
+
                 grid[ir][ic] = tetraCell;
 
-                // set neighbours
-                // since we start at left top we can populate
-                // the grid setting only top and left neighbours and vice versa
-                // edge case are
-                // row == 0, column == 0 and row == getRows() -1 getColumns() -1
+                // Only if we have a normal cell we add neighbours
+                if(!unmasked) {
+                    // set neighbours
+                    // since we start at left top we can populate
+                    // the grid setting only top and left neighbours and vice versa
+                    // edge case are
+                    // row == 0, column == 0 and row == getRows() -1 getColumns() -1
+                    //
+                    // -- first row
+                    if (0 == ir) {
+                        // Nothing todo since
+                        // we already set each neighbour for each cell in the
+                        // init() step with a border cell
 
+                    } else {
 
-                if(0 == ir ) {
-                    if(unmasked) {
-                        tetraCell.setNeighbourNorth(borderCell);
-                    }
-                } else {
-
-                    ICell2DTetragon nbn = grid[ir - 1][ic];
-                    tetraCell.setNeighbourNorth(nbn);
-                    // If north neighbour is not masked we can set the current cell
-                    // to the south neighbour
-                    if(isUnmasked(nbn)) {
-                        nbn.setNeighbourSouth(tetraCell);
-                    }
-                }
-
-                if(0 == ic) {
-                    if(unmasked) {
-                        tetraCell.setNeighbourWest(borderCell);
-                    }
-                } else {
-
-                    // get the west neighbour, set this to this cell neighbour
-                    // and vice versa if the cell is not masked
-                    ICell2DTetragon nbw = grid[ir][ic - 1];
-                    tetraCell.setNeighbourWest(nbw);
-
-
-                    if(isUnmasked(nbw)) {
-                        nbw.setNeighbourEast(tetraCell);
+                        ICell2DTetragon nbn = grid[ir - 1][ic];
+                        tetraCell.setNeighbourNorth(nbn);
+                        // If north neighbour is not masked we can set the current cell
+                        // to the south neighbour
+                        if (isUnmasked(nbn)) {
+                            nbn.setNeighbourSouth(tetraCell);
+                        }
                     }
 
-                }
-                // corner case last row
-                // set south neighbour
-                if (getRows() - 1 == ir) {
+                    if (0 == ic) {
 
-                    tetraCell.setNeighbourSouth(borderCell);
-                }
-                // corner case last col
-                // set east neighbour
-                if (getColumns() - 1 == ic) {
+// nothing here
 
-                    tetraCell.setNeighbourEast(borderCell);
-                }
+                    } else {
 
+                        // get the west neighbour, set this to this cell neighbour
+                        // and vice versa if the cell is not masked
+                        ICell2DTetragon nbw = grid[ir][ic - 1];
+                        tetraCell.setNeighbourWest(nbw);
+
+
+                        if (isUnmasked(nbw)) {
+                            nbw.setNeighbourEast(tetraCell);
+                        }
+
+                    }
+                    // corner case last row
+                    // set south neighbour
+                    if (getRows() - 1 == ir) {
+
+                        // nothing here
+                    }
+                    // corner case last col
+                    // set east neighbour
+                    if (getColumns() - 1 == ic) {
+
+// nothing here
+                    }
+                }
             }
         }
 
     }
 
     @Override
-    void configure() {
+    protected void configure() {
 
     }
+
 
     @Override
     ICell2DTetragon[][] grid() {
@@ -132,7 +142,7 @@ public class Grid2DTetragon extends AbstractGrid2DCartesian<ICell2DTetragon> {
      * Create a new tetragonal grid.
      * @param rows rows [{@linkplain #MIN_LEN} .. ]
      * @param columns columns [{@linkplain #MIN_LEN} .. ]
-     * @return
+     * @return Tetragonal grid with [{@code rows} x {code columns}]
      */
     public static Grid2DTetragon of(int rows, int columns) {
         if(MIN_LEN > rows) {

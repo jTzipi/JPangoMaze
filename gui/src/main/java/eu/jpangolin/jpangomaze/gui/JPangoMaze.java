@@ -14,19 +14,21 @@
  * limitations under the License.
  */
 
-package eu.jpangolin.jpangomaze.core.algo;
+package eu.jpangolin.jpangomaze.gui;
 
-import eu.jpangolin.jpangomaze.core.cell.ICell;
-import eu.jpangolin.jpangomaze.core.grid.IGrid;
+import javafx.application.Application;
+import javafx.stage.Stage;
 
 /**
- * Each algorithm can construct or 'plant' a grid.
- * @param <G> grid type
- * @param <C> cell type
- * @author jTzipi
+ * GUI Start point.
  */
-public interface IPlantable<G extends IGrid<C>, C extends ICell> {
+public class JPangoMaze extends Application {
+    @Override
+    public void start(Stage stage) throws Exception {
 
-    void plant( G grid);
+    }
 
+    public static void main(String[] args) {
+        launch();
+    }
 }

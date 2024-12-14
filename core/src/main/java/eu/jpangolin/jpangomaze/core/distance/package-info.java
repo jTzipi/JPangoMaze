@@ -13,14 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package eu.jpangolin.jpangomaze.core.cell;
-
-import eu.jpangolin.jpangomaze.core.cell.d2.ICell2DCartesian;
-
-import java.util.Optional;
-
-public record TraverseRequest2DCartesian<C extends ICell2DCartesian>(ITraverseRequest.RequestResult requestResult, Optional<C> neighbour) implements ITraverseRequest<C> {
-
-
-}
+/**
+ * Package for measuring distances between cells.
+ */
+package eu.jpangolin.jpangomaze.core.distance;

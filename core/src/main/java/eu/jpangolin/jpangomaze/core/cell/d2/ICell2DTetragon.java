@@ -16,53 +16,66 @@
 
 package eu.jpangolin.jpangomaze.core.cell.d2;
 
-import eu.jpangolin.jpangomaze.core.IWeightedEdge;
-
-
-import java.util.Optional;
 
 /**
  * A tetragon - rectangular - cell in 2D.
+ * <p>
+ *     A tetragonal cell have
+ *     <ul>
+ *         <li><b>N</b>orth</li>
+ *         <li><b>E</b>ast</li>
+ *         <li><b>W</b>est</li>
+ *         <li><b>S</b>outh</li>
+ *     </ul>
+ *     Neighbour.
+ * </p>
+ * @author jTzipi
  */
 public interface ICell2DTetragon extends ICell2DCartesian {
 
     /**
-     * Return an optional edge to the north neighbour.
-     * @return
+     * Return edge to the north neighbour.
+     * @apiNote This edge is always present! Even if the edge points to a cell which is not visitable.
+     * @return north edge
      */
-    Optional<IWeightedEdge<ICell2DTetragon>> getNeighbourNorth();
-
+    ICell2DTetragon getNeighbourNorth();
+    /**
+     * Return edge to the east neighbour.
+     * @apiNote This edge is always present! Even if the edge points to a cell which is not visitable.
+     * @return east edge
+     */
     ICell2DTetragon getNeighbourEast();
-
+    /**
+     * Return edge to the west neighbour.
+     * @apiNote This edge is always present! Even if the edge points to a cell which is not visitable.
+     * @return west edge
+     */
     ICell2DTetragon getNeighbourWest();
-
+    /**
+     * Return edge to the south neighbour.
+     * @apiNote This edge is always present! Even if the edge points to a cell which is not visitable.
+     * @return south edge
+     */
     ICell2DTetragon getNeighbourSouth();
 
-    default void setNeighbourNorth(ICell2DTetragon nb) {
-        setNeighbourNorth(nb, IWeightedEdge.SIMPLE);
-    }
-
-    void setNeighbourNorth(ICell2DTetragon nbCell, long weight);
-
-    default void setNeighbourEast(ICell2DTetragon nbCell ) {
-        setNeighbourEast(nbCell, IWeightedEdge.SIMPLE);
-    }
-
-    void setNeighbourEast(ICell2DTetragon nbCell, long weight);
-
-
-    default void setNeighbourWest(ICell2DTetragon nbCell) {
-        setNeighbourWest(nbCell, IWeightedEdge.SIMPLE);
-    }
-
-    void setNeighbourWest(ICell2DTetragon nbCell, long weight);
-
-    default void setNeighbourSouth(ICell2DTetragon nbCell ) {
-        setNeighbourSouth(nbCell, IWeightedEdge.SIMPLE);
-    }
-
-    void setNeighbourSouth(ICell2DTetragon nbCell, long weight);
-
-
-
+    /**
+     * Set north neighbour.
+     * @param neighbourNorth north neighbour
+     */
+    void setNeighbourNorth(ICell2DTetragon neighbourNorth);
+    /**
+     * Set east neighbour.
+     * @param neighbourEast east neighbour
+     */
+    void setNeighbourEast(ICell2DTetragon neighbourEast);
+    /**
+     * Set west neighbour.
+     * @param neighbourWest west neighbour
+     */
+    void setNeighbourWest(ICell2DTetragon neighbourWest);
+    /**
+     * Set south neighbour.
+     * @param neighbourSouth south neighbour
+     */
+    void setNeighbourSouth(ICell2DTetragon neighbourSouth);
 }
