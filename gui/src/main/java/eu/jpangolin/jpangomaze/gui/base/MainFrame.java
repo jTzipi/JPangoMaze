@@ -18,5 +18,23 @@ package eu.jpangolin.jpangomaze.gui.base;
 
 import javafx.scene.layout.BorderPane;
 
+/**
+ * Main Frame.
+ */
 public final class MainFrame extends BorderPane {
+
+    private static final MainFrame MAIN_FRAME = new MainFrame();
+
+    private MainFrame() {
+
+        initMainFrame();
+    }
+
+    public static MainFrame instance() {
+        return MAIN_FRAME;
+    }
+
+    private void initMainFrame() {
+        setCenter(new MazePanel());
+    }
 }

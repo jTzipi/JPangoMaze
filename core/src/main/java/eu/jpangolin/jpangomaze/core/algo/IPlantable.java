@@ -27,6 +27,12 @@ import eu.jpangolin.jpangomaze.core.grid.IGrid;
  */
 public interface IPlantable<G extends IGrid<C>, C extends ICell> {
 
+    /**
+     * 'Plant' the maze.
+     * That is run the algorithm to create the maze.
+     * @param grid Grid to plant the maze on
+     * @throws NullPointerException if {@code grid}
+     */
     void plant( G grid);
 
 }

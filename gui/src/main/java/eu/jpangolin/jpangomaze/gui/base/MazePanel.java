@@ -14,28 +14,30 @@
  * limitations under the License.
  */
 
-package eu.jpangolin.jpangomaze.gui;
+package eu.jpangolin.jpangomaze.gui.base;
 
-import eu.jpangolin.jpangomaze.gui.base.MainFrame;
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
+import eu.jpangolin.jpangomaze.core.algo.IPlantable;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.ToolBar;
+import javafx.scene.layout.BorderPane;
 
-/**
- * GUI Start point.
- */
-public class JPangoMaze extends Application {
+public class MazePanel extends BorderPane {
 
 
-    @Override
-    public void start(Stage stage) throws Exception {
+    private ToolBar mainToolbar;
+    private ComboBox<IPlantable<?,?>> plantAlgoComboBox;
+    private Canvas canvas;
 
-        stage.setTitle("PangoMaze");
-        stage.setScene(new Scene(MainFrame.instance(), 1200D, 1200D));
-        stage.show();
+
+    MazePanel() {
+        initMazePanel();
     }
 
-    public static void main(String[] args) {
-        launch();
+    private void initMazePanel() {
+
+
+
+
     }
 }

@@ -21,7 +21,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>eu.jtzipi.jpangomaze</groupId>
+        <groupId>eu.jpangolin.jpangomaze</groupId>
         <artifactId>jpangomaze-parent</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
